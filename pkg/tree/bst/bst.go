@@ -98,11 +98,56 @@ func Delete(t *Node, value uint64) *Node {
 			t = nil
 			return rightChild
 		} else {
-			tmp := findMin(t.left)
-			t.data = tmp.data
-			t.left = Delete(t.left, tmp.data)
+			if getHeight(t.left) < getHeight(t.right) {
+				tmp := findMin(t.left)
+				t.data = tmp.data
+				t.left = Delete(t.left, tmp.data)
+			} else {
+				tmp := findMax(t.left)
+				t.data = tmp.data
+				t.left = Delete(t.left, tmp.data)
+			}
 		}
 	}
+	return t
+}
+
+func getHeight(t *Node) int {
+	if getHeightLeft(t) > getHeightRight(t) {
+		return getHeightLeft(t)
+	} else {
+		return getHeightRight(t)
+	}
+}
+func getHeightLeft(t *Node) int {
+	leftheight := 0
+	if t == nil {
+		return 0
+	}
+
+	leftheight = getHeightLeft(t.left) + 1
+
+	return leftheight
+
+}
+
+func getHeightRight(t *Node) int {
+	rightheight := 0
+	if t == nil {
+		return 0
+	}
+
+	rightheight = getHeightLeft(t.right) + 1
+
+	return rightheight
+}
+
+func findMax(t *Node) *Node {
+
+	for t.right != nil {
+		t = t.right
+	}
+
 	return t
 }
 
@@ -114,3 +159,37 @@ func findMin(t *Node) *Node {
 
 	return t
 }
+
+var result [][]uint64
+
+func preorderTraversal(t *Node, iArr *[]uint64) {
+	if t == nil {
+		return
+	}
+	*iArr = append(*iArr, t.data)
+	preorderTraversal(t.left, iArr)
+	//*iArr = append(*iArr, t.data)
+	preorderTraversal(t.right, iArr)
+	//*iArr = append(*iArr, t.data)
+	return
+}
+
+//Tree Driver code
+// var root *bst.Node
+// bst.Insert(&root, 20)
+// bst.Insert(&root, 30)
+// bst.Insert(&root, 50)
+// bst.Insert(&root, 40)
+// bst.Insert(&root, 10)
+// bst.Insert(&root, 7)
+// bst.Insert(&root, 70)
+// bst.Insert(&root, 500)
+
+// fmt.Println(bst.Find(root, 10))
+
+// bst.Traverse_preorder(root)
+// root = bst.Delete(root, 50)
+// fmt.Println("")
+// bst.Traverse_inorder(root)
+// fmt.Println("")
+// bst.Traverse_postorder(root)
